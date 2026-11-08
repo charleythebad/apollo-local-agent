@@ -48,7 +48,8 @@
     ],
     "active": [
       { "name": "skl_004_log_monitor", "filename": "skl_004_log_monitor_v1.1.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Daily digest of warnings and errors from the structured log" },
-      { "name": "skl_006_version_control", "filename": "skl_006_version_control_v1.4.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Snapshot, list, and all-or-nothing rollback of governing docs and skills" }
+      { "name": "skl_006_version_control", "filename": "skl_006_version_control_v1.4.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Snapshot, list, and all-or-nothing rollback of governing docs and skills" },
+      { "name": "skl_014_approval_gate", "filename": "skl_014_approval_gate_v1.0.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Human approval gate: propose, principal-only approve/reject, expiry, ledger, idempotent action" }
     ]
   },
   "failure_responses": {

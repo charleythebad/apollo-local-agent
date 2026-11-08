@@ -4,7 +4,7 @@
 'use strict';
 
 require('dotenv').config();
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const fs   = require('fs');
 const path = require('path');
 
@@ -59,7 +59,10 @@ health.init(IDENTITY, CHANNELS, ROOT);
 const memory = null; // plug a memory layer in here (e.g. a local vector store); skills receive it
 
 const client = new Client({
-  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent]
+  intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent,
+            GatewayIntentBits.GuildMessageReactions],
+  // Partials let reactions on messages sent before a restart still arrive (approval gate).
+  partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
 
 // ── SKILL LOADER ─────────────────────────────────────────────────────────────
@@ -68,6 +71,7 @@ const client = new Client({
 
 require('./skl_004_log_monitor_v1.1')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
 require('./skl_006_version_control_v1.4')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
+require('./skl_014_approval_gate_v1.0')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
 // END SKILL LOADER
 
 // ── Startup ──────────────────────────────────────────────────────────────────
