@@ -1,0 +1,66 @@
+{
+  "_document_type": "manifest",
+  "_manifest_version": "1.0",
+  "_schema_version": "1.0",
+  "_created": "2026-11-07",
+  "_modified": "2026-11-07",
+  "_owner": "principal",
+  "_note": "Example manifest. Every secret and ID (tokens, channel IDs, URLs) is an ${ENV_VAR} placeholder resolved from .env at runtime; this file holds role labels and non-sensitive settings only. NFA - not financial advice.",
+  "identity": {
+    "system_name": "Apollo",
+    "principal": "<your name>",
+    "version_label": "v1.0"
+  },
+  "models": {
+    "strength_model": { "name": "<large local model, e.g. a 30B-class model in Ollama>", "endpoint": "${OLLAMA_URL}/api/chat", "role": "Complex reasoning, primary conversation" },
+    "agility_model": { "name": "<small fast local model, e.g. a 7B-class model>", "endpoint": "${OLLAMA_URL}/api/chat", "role": "Routing and dispatch, commands, health checks" },
+    "embedding_model": { "name": "<embedding model>", "endpoint": "${OLLAMA_URL}/api/embeddings", "role": "Semantic search and memory retrieval" }
+  },
+  "services": {
+    "inference_endpoint": "${OLLAMA_URL}",
+    "memory_layer": "${MEMORY_URL}"
+  },
+  "channels": {
+    "command_interface": "${CHANNEL_COMMAND}",
+    "health": "${CHANNEL_HEALTH}",
+    "logs": "${CHANNEL_LOGS}",
+    "approvals": "${CHANNEL_APPROVALS}"
+  },
+  "paths": {
+    "root": "${APOLLO_ROOT}",
+    "logs": "${APOLLO_ROOT}/logs/",
+    "bot_file": "${APOLLO_ROOT}/bot.js",
+    "skill_lifecycle": "${APOLLO_ROOT}/logs/skill_lifecycle.json",
+    "event_log": "${APOLLO_ROOT}/logs/events.json",
+    "constitutions": "${APOLLO_ROOT}/governance/",
+    "versions": "${APOLLO_ROOT}/versions/"
+  },
+  "code_limits": {
+    "max_lines": { "foundation": 140, "governance": 120, "interface": 80, "reasoning": 100 },
+    "bot_max_lines": 400,
+    "required_registries": ["registeredCommands", "registeredIntervals"],
+    "naming_convention": "skl_XXX_descriptivename_vN.N.js — bump the version in the filename on every change"
+  },
+  "skill_registry": {
+    "foundation": [
+      { "name": "router", "branch": "foundation", "injected_date": "2026-11-07" },
+      { "name": "health_monitor", "branch": "foundation", "injected_date": "2026-11-07" }
+    ],
+    "active": [
+      { "name": "skl_004_log_monitor", "filename": "skl_004_log_monitor_v1.1.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Daily digest of warnings and errors from the structured log" },
+      { "name": "skl_006_version_control", "filename": "skl_006_version_control_v1.4.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Snapshot, list, and all-or-nothing rollback of governing docs and skills" }
+    ]
+  },
+  "failure_responses": {
+    "agility_model_down": "fallback_to_strength_model",
+    "inference_endpoint_down": "attempt_restart_then_alert_command_interface",
+    "deploy_failure": "auto_rollback_then_alert_command_interface",
+    "memory_warning": "log_and_notify_command_interface",
+    "memory_critical": "shutdown_agility_model_fallback_to_strength_model"
+  },
+  "memory_thresholds": { "warning_gb": 4, "critical_gb": 2 },
+  "log_rotation": { "window_days": 7, "format": "YYYY-MM-DD.json", "trigger": "startup" },
+  "version_log": [
+    { "version": "1.0", "date": "2026-11-07", "change": "Example manifest." }
+  ]
+}

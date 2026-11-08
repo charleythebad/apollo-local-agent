@@ -1,0 +1,150 @@
+{
+  "_document_type": "schema",
+  "_schema_version": "1.0",
+  "_created": "2026-11-07",
+  "_modified": "2026-11-07",
+  "_owner": "principal",
+  "_description": "Defines the required shape of the manifest. Every manifest change must validate against this schema (tools/docs_audit.js) before it is used. NFA - not financial advice.",
+  "required_top_level_fields": ["_document_type", "_manifest_version", "_schema_version", "_created", "_modified", "_owner"],
+  "fields": {
+    "_document_type": { "type": "string", "required": true, "value": "manifest" },
+    "_manifest_version": { "type": "string", "required": true, "pattern": "^[0-9]+\\.[0-9]+$" },
+    "_schema_version": { "type": "string", "required": true },
+    "_created": { "type": "string", "required": true },
+    "_modified": { "type": "string", "required": true },
+    "_owner": { "type": "string", "required": true },
+    "_note": { "type": "string" },
+    "identity": {
+      "type": "object", "required": true,
+      "fields": {
+        "system_name": { "type": "string", "required": true },
+        "principal": { "type": "string", "required": true },
+        "version_label": { "type": "string", "required": true }
+      }
+    },
+    "models": {
+      "type": "object", "required": true,
+      "fields": {
+        "strength_model": { "type": "object", "required": true, "fields": {
+          "name": { "type": "string", "required": true },
+          "endpoint": { "type": "string", "required": true },
+          "role": { "type": "string", "required": true } } },
+        "agility_model": { "type": "object", "required": true, "fields": {
+          "name": { "type": "string", "required": true },
+          "endpoint": { "type": "string", "required": true },
+          "role": { "type": "string", "required": true } } },
+        "embedding_model": { "type": "object", "fields": {
+          "name": { "type": "string", "required": true },
+          "endpoint": { "type": "string", "required": true },
+          "role": { "type": "string", "required": true } } }
+      }
+    },
+    "services": {
+      "type": "object", "required": true,
+      "fields": {
+        "inference_endpoint": { "type": "string", "required": true },
+        "memory_layer": { "type": "string" }
+      }
+    },
+    "channels": {
+      "type": "object", "required": true,
+      "fields": {
+        "command_interface": { "type": "string", "required": true, "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
+        "health": { "type": "string", "required": true, "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
+        "logs": { "type": "string", "required": true, "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
+        "approvals": { "type": "string", "pattern": "^\\$\\{[A-Z0-9_]+\\}$" }
+      }
+    },
+    "paths": {
+      "type": "object", "required": true,
+      "fields": {
+        "root": { "type": "string", "required": true },
+        "logs": { "type": "string", "required": true },
+        "bot_file": { "type": "string", "required": true },
+        "skill_lifecycle": { "type": "string", "required": true },
+        "event_log": { "type": "string", "required": true },
+        "constitutions": { "type": "string", "required": true },
+        "versions": { "type": "string", "required": true }
+      }
+    },
+    "code_limits": {
+      "type": "object", "required": true,
+      "fields": {
+        "max_lines": { "type": "object", "required": true, "fields": {
+          "foundation": { "type": "integer", "required": true },
+          "governance": { "type": "integer", "required": true },
+          "interface": { "type": "integer", "required": true },
+          "reasoning": { "type": "integer", "required": true } } },
+        "bot_max_lines": { "type": "integer", "required": true },
+        "required_registries": { "type": "array", "required": true },
+        "naming_convention": { "type": "string", "required": true }
+      }
+    },
+    "skill_registry": {
+      "type": "object", "required": true,
+      "fields": {
+        "foundation": { "type": "array", "required": true, "items": { "fields": {
+          "name": { "type": "string", "required": true },
+          "branch": { "type": "string", "required": true, "value": "foundation" },
+          "injected_date": { "type": "string", "required": true },
+          "filename": { "type": "string" } } } },
+        "active": { "type": "array", "required": true, "items": { "fields": {
+          "name": { "type": "string", "required": true },
+          "branch": { "type": "string", "required": true },
+          "type": { "type": "string" },
+          "note": { "type": "string" },
+          "deployed_date": { "type": "string", "required": true },
+          "filename": { "type": "string" } } } }
+      }
+    },
+    "failure_responses": {
+      "type": "object", "required": true,
+      "fields": {
+        "agility_model_down": { "type": "string", "required": true },
+        "inference_endpoint_down": { "type": "string", "required": true },
+        "deploy_failure": { "type": "string", "required": true },
+        "memory_warning": { "type": "string", "required": true },
+        "memory_critical": { "type": "string", "required": true }
+      }
+    },
+    "memory_thresholds": {
+      "type": "object", "required": true,
+      "fields": {
+        "warning_gb": { "type": "number", "required": true },
+        "critical_gb": { "type": "number", "required": true }
+      }
+    },
+    "log_rotation": {
+      "type": "object", "required": true,
+      "fields": {
+        "window_days": { "type": "integer", "required": true },
+        "format": { "type": "string", "required": true },
+        "trigger": { "type": "string", "required": true }
+      }
+    },
+    "version_log": {
+      "type": "array",
+      "items": { "fields": {
+        "version": { "type": "string", "required": true },
+        "date": { "type": "string", "required": true },
+        "change": { "type": "string", "required": true } } }
+    }
+  },
+  "validation_rules": [
+    "All required fields must be present, or the manifest is rejected",
+    "No field may be added that this schema does not declare",
+    "Type mismatches are rejected outright",
+    "Channel values are environment-variable placeholders like ${CHANNEL_HEALTH}, never raw IDs",
+    "The schema is never inferred from the manifest's shape",
+    "Every manifest change increments _manifest_version and sets _modified to the change date"
+  ],
+  "write_permissions": {
+    "read": "any_agent",
+    "write": "builder_with_principal_approval",
+    "structural_change": "principal_instruction_required"
+  },
+  "conflict_resolution": "If the manifest and schema disagree on load, flag it to the principal immediately and suspend manifest changes until resolved. No automatic reconciliation.",
+  "version_log": [
+    { "version": "1.0", "date": "2026-11-07", "change": "Example schema." }
+  ]
+}
