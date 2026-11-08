@@ -1,0 +1,18 @@
+{
+  "name": "apollo-local-agent",
+  "version": "1.0.0",
+  "description": "Apollo: a governed personal AI agent that runs entirely on local models. NFA - not financial advice.",
+  "main": "bot.js",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "node bot.js",
+    "audit": "node tools/docs_audit.js",
+    "test": "node tests/skl006.test.js && node tests/jobs_runner.test.js && node tests/health_alerts.test.js"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "discord.js": "^14.26.4",
+    "dotenv": "^17.4.2"
+  }
+}

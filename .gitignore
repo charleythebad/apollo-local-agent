@@ -8,3 +8,5 @@ node_modules/
 *.bak*
 openclaw.json*
 *.jsonl
+!.env.example
+versions/

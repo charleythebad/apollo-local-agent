@@ -1,0 +1,19 @@
+{
+  "_document_type": "version_index",
+  "_created": "2026-11-07",
+  "_modified": "2026-11-07",
+  "_owner": "principal",
+  "_note": "Single source of truth for which governing documents are active. Rollback = repoint 'active' (via !version rollback); archived files are never edited. Checked by tools/docs_audit.js.",
+  "active": {
+    "version": "v1.0",
+    "activated_date": "2026-11-07",
+    "bot": "bot.js",
+    "manifest": "governance/manifest.example.json",
+    "schema": "governance/schema.example.json",
+    "constitution": "governance/constitution.template.md",
+    "roles": "governance/roles.template.md",
+    "channel_constitutions": {}
+  },
+  "history": [],
+  "rollback_log": []
+}
