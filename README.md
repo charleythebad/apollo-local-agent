@@ -128,3 +128,7 @@ Every change, however small:
 Monthly paper-trading results versus SPY will be published here: percent
 returns, win rate, max drawdown and trade count. No dollar amounts, and closed
 positions only. **NFA.**
+
+## License
+
+[MIT](LICENSE). NFA — not financial advice.
