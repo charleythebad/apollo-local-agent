@@ -1,0 +1,10 @@
+.env
+.env.*
+*.log
+logs/
+data/
+node_modules/
+.DS_Store
+*.bak*
+openclaw.json*
+*.jsonl
