@@ -175,9 +175,12 @@ Every change, however small:
 
 ## Results
 
-Monthly paper-trading results versus SPY will be published here: percent
-returns, win rate, max drawdown and trade count. No dollar amounts, and closed
-positions only. **NFA.**
+Monthly from December 2026: return and yearly rate per ticker and overall,
+versus SPY on the same capital over the same days, plus fill rate and order
+counts. Open positions are marked to market, because counting only closed
+trades would hide losses. A yearly rate is shown only after 30 days of capital
+at work. Percentages only: no dollar amounts, positions or strikes. Paper
+account only. **NFA.**
 
 ## License
 
