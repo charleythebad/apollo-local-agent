@@ -40,6 +40,7 @@ bot.js ─ deterministic core: wiring, routing, skill loader (no feature logic)
    │      chat: small model first, escalates to the large model when unsure
    │
    ├── skills (skl_*.js)       one file per feature, fixed 6-arg signature
+   │     └── agent slots       a whole agent framework behind one skill (live, not published)
    ├── modules/                pure logic, unit-tested without Discord
    ├── governance/             constitution, roles, manifest, schema
    └── version_index.json      which governing documents are active
@@ -52,6 +53,47 @@ bot.js ─ deterministic core: wiring, routing, skill loader (no feature logic)
   plain English first, and never approves anything itself.
 - **Secrets live only in `.env`.** The manifest holds `${ENV_VAR}` placeholders,
   and the schema rejects a raw channel ID if one sneaks in.
+
+## Slotted agents
+
+Skills are slots, and a slot can hold an entire agent, not just a function.
+In the running system, a separate agent framework ([OpenClaw](https://github.com/openclaw/openclaw))
+sits behind two skills: a chat agent and an email agent. Apollo stays the
+orchestrator, and each agent is just another governed slot.
+
+```
+Principal ──► Apollo (orchestrator)
+                 ├── !oc   ──► chat agent     no tools at all
+                 └── !pipe ──► pipeline (run by Apollo)
+                                 1. agent A replies
+                                 2. Apollo hands that reply to agent B (email: drafts only)
+                                 3. plain code files the draft
+```
+
+How a slot is fenced:
+
+- **Subprocess, not a shared process.** Each call spawns the agent's CLI with
+  `spawn` (no shell) and a minimal environment, so unrelated tokens never reach
+  the child. Every call has a timeout.
+- **Principal-locked.** Only the principal can trigger a slot. Agents can't call
+  each other, and can't call Apollo.
+- **Least privilege per agent.** The chat agent has no tools. The email agent
+  can write drafts, and sending is blocked by a wrapper around the mail CLI
+  (see [`examples/no-send-email-shim.sh`](examples/no-send-email-shim.sh)).
+- **One sanctioned hand-off.** Agent-to-agent composition happens only through
+  the pipeline skill, where pipelines are data: each node's reply becomes the
+  next node's prompt, and Apollo logs every step.
+- **Deterministic where the model was unreliable.** When the email agent
+  repeatedly failed to stage a draft, that step moved out of the agent and into
+  plain code. The agent writes; code does the filing.
+
+Known gap: the email agent's no-send rule is enforced by a wrapper, not an OS
+sandbox, so an agent with shell access could go around it. See the playbook's
+first lesson, "Constitutions shape; fences enforce."
+
+The relay and pipeline code aren't in this repo yet: they're tied to one
+machine's paths and channels. The rules they follow are in
+[`governance/roles.template.md`](governance/roles.template.md) (Tool Worker, Sub-Agent).
 
 ## What's in the repo
 
@@ -118,7 +160,7 @@ Every change, however small:
 ## Limitations
 
 - This is the governance core, not the whole running system. The trading skill,
-  email agent and personal integrations are not published.
+  slotted-agent relay (described above) and personal integrations are not published.
 - One principal, one machine, Discord as the only interface. Tested on macOS.
 - Rules in the constitution shape behavior; only code and configuration enforce it.
   Where a rule has no mechanical backstop, the playbook says so.
