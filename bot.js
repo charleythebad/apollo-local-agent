@@ -34,7 +34,9 @@ const CHANNELS = {
   boss:      fromEnv(MANIFEST.channels.command_interface),
   health:    fromEnv(MANIFEST.channels.health),
   logs:      fromEnv(MANIFEST.channels.logs),
-  approvals: fromEnv(MANIFEST.channels.approvals)
+  approvals: fromEnv(MANIFEST.channels.approvals),
+  agentChat:  fromEnv(MANIFEST.channels.agent_chat),
+  agentEmail: fromEnv(MANIFEST.channels.agent_email)
 };
 
 const MODELS = {
@@ -72,6 +74,8 @@ const client = new Client({
 require('./skl_004_log_monitor_v1.1')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
 require('./skl_006_version_control_v1.4')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
 require('./skl_014_approval_gate_v1.0')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
+require('./skl_010_openclaw_v1.0')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
+require('./skl_012_pipeline_v1.0')(registeredCommands, touchSkill, log, memory, client, CHANNELS);
 // END SKILL LOADER
 
 // ── Startup ──────────────────────────────────────────────────────────────────

@@ -1,9 +1,9 @@
 {
   "_document_type": "manifest",
-  "_manifest_version": "1.0",
-  "_schema_version": "1.0",
+  "_manifest_version": "1.1",
+  "_schema_version": "1.1",
   "_created": "2026-11-07",
-  "_modified": "2026-11-07",
+  "_modified": "2026-11-09",
   "_owner": "principal",
   "_note": "Example manifest. Every secret and ID (tokens, channel IDs, URLs) is an ${ENV_VAR} placeholder resolved from .env at runtime; this file holds role labels and non-sensitive settings only. NFA - not financial advice.",
   "identity": {
@@ -24,7 +24,9 @@
     "command_interface": "${CHANNEL_COMMAND}",
     "health": "${CHANNEL_HEALTH}",
     "logs": "${CHANNEL_LOGS}",
-    "approvals": "${CHANNEL_APPROVALS}"
+    "approvals": "${CHANNEL_APPROVALS}",
+    "agent_chat": "${CHANNEL_AGENT_CHAT}",
+    "agent_email": "${CHANNEL_AGENT_EMAIL}"
   },
   "paths": {
     "root": "${APOLLO_ROOT}",
@@ -49,7 +51,9 @@
     "active": [
       { "name": "skl_004_log_monitor", "filename": "skl_004_log_monitor_v1.1.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Daily digest of warnings and errors from the structured log" },
       { "name": "skl_006_version_control", "filename": "skl_006_version_control_v1.4.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Snapshot, list, and all-or-nothing rollback of governing docs and skills" },
-      { "name": "skl_014_approval_gate", "filename": "skl_014_approval_gate_v1.0.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Human approval gate: propose, principal-only approve/reject, expiry, ledger, idempotent action" }
+      { "name": "skl_014_approval_gate", "filename": "skl_014_approval_gate_v1.0.js", "branch": "governance", "deployed_date": "2026-11-07", "note": "Human approval gate: propose, principal-only approve/reject, expiry, ledger, idempotent action" },
+      { "name": "skl_010_openclaw", "filename": "skl_010_openclaw_v1.0.js", "branch": "agents", "deployed_date": "2026-11-09", "note": "Agent slot: relays !oc to the chat agent (no tools) in a subprocess with a minimal env" },
+      { "name": "skl_012_pipeline", "filename": "skl_012_pipeline_v1.0.js", "branch": "agents", "deployed_date": "2026-11-09", "note": "The only sanctioned agent-to-agent hand-off; code files drafts and checks the agent kept the note" }
     ]
   },
   "failure_responses": {
@@ -62,6 +66,7 @@
   "memory_thresholds": { "warning_gb": 4, "critical_gb": 2 },
   "log_rotation": { "window_days": 7, "format": "YYYY-MM-DD.json", "trigger": "startup" },
   "version_log": [
-    { "version": "1.0", "date": "2026-11-07", "change": "Example manifest." }
+    { "version": "1.0", "date": "2026-11-07", "change": "Example manifest." },
+    { "version": "1.1", "date": "2026-11-09", "change": "Added agent slots skl_010 and skl_012, and the agent_chat and agent_email channels." }
   ]
 }

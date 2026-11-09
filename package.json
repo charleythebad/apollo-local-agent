@@ -8,7 +8,7 @@
   "scripts": {
     "start": "node bot.js",
     "audit": "node tools/docs_audit.js",
-    "test": "node tests/skl006.test.js && node tests/jobs_runner.test.js && node tests/health_alerts.test.js && node tests/approval_gate.test.js"
+    "test": "node tests/skl006.test.js && node tests/jobs_runner.test.js && node tests/health_alerts.test.js && node tests/approval_gate.test.js && node tests/agent_slots.test.js"
   },
   "engines": { "node": ">=20" },
   "dependencies": {

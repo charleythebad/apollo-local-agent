@@ -40,7 +40,7 @@ bot.js ─ deterministic core: wiring, routing, skill loader (no feature logic)
    │      chat: small model first, escalates to the large model when unsure
    │
    ├── skills (skl_*.js)       one file per feature, fixed 6-arg signature
-   │     └── agent slots       a whole agent framework behind one skill (live, not published)
+   │     └── agent slots       a whole agent framework behind one skill
    ├── modules/                pure logic, unit-tested without Discord
    ├── governance/             constitution, roles, manifest, schema
    └── version_index.json      which governing documents are active
@@ -91,8 +91,15 @@ Known gap: the email agent's no-send rule is enforced by a wrapper, not an OS
 sandbox, so an agent with shell access could go around it. See the playbook's
 first lesson, "Constitutions shape; fences enforce."
 
-The relay and pipeline code aren't in this repo yet: they're tied to one
-machine's paths and channels. The rules they follow are in
+The code is in this repo: [`modules/openclaw_relay.js`](modules/openclaw_relay.js)
+(the fences), [`skl_010_openclaw_v1.0.js`](skl_010_openclaw_v1.0.js) (a slot is
+about 20 lines), [`skl_012_pipeline_v1.0.js`](skl_012_pipeline_v1.0.js) and
+[`modules/note_bundles.js`](modules/note_bundles.js). The `note` pipeline is the
+"code does the filing" example: the agent's reply is refused unless the original
+note's words are in it, in order. [`tests/agent_slots.test.js`](tests/agent_slots.test.js)
+runs all of it against a fake agent and a fake draft command, including a child
+process that must never see the bot's token, an agent that invents a report, and
+one that hangs. The rules these follow are in
 [`governance/roles.template.md`](governance/roles.template.md) (Tool Worker, Sub-Agent).
 
 ## What's in the repo
@@ -105,6 +112,7 @@ machine's paths and channels. The rules they follow are in
 | [`tools/docs_audit.js`](tools/docs_audit.js) | Fails if the manifest drifts from the schema, or if the skill registry, `bot.js` and the files on disk disagree |
 | [`tools/preflight.sh`](tools/preflight.sh) | Read-only check before any restart: code parses, audit, `.env` present and **not tracked by git**, services, model pin, backup age, jobs, kill switch, tests, uncommitted changes |
 | [`skl_014_approval_gate_v1.0.js`](skl_014_approval_gate_v1.0.js) + [`modules/approval_gate.js`](modules/approval_gate.js) | Human approval gate: propose → principal-only ✅ → action, with expiry, a ledger, and crash-safe execution |
+| [`modules/openclaw_relay.js`](modules/openclaw_relay.js) · [`skl_010`](skl_010_openclaw_v1.0.js) · [`skl_012`](skl_012_pipeline_v1.0.js) | Agent slots: another agent framework run as a fenced subprocess, and a pipeline where code, not the agent, files the result |
 | [`skl_006_version_control_v1.4.js`](skl_006_version_control_v1.4.js) | Snapshot and all-or-nothing rollback of governing docs and skills, auto-committed to git |
 | [`modules/jobs_runner.js`](modules/jobs_runner.js) | Cron scheduler: DST-safe matching, one run per job at a time, re-sends a failed post but never re-runs the job |
 | [`modules/health_alerts.js`](modules/health_alerts.js) · [`health.js`](health.js) | One "down" alert after two failed checks, one "back" alert, nothing in between; self-recovery for Ollama and a stuck DNS cache (via Tailscale) |
@@ -145,7 +153,7 @@ npm start
 
 Commands (command channel, principal only): `!health`, `!status`,
 `!propose`, `!approve`, `!reject`, `!proposals`, `!version save|list|rollback`,
-`!logreport`. Unknown `!commands` get a list of real ones back — they never go to
+`!logreport`, and with agent slots set up, `!oc` and `!pipe`. Unknown `!commands` get a list of real ones back — they never go to
 the model, so a typo can't turn into a guess.
 
 ## Change ritual
@@ -160,7 +168,7 @@ Every change, however small:
 ## Limitations
 
 - This is the governance core, not the whole running system. The trading skill,
-  slotted-agent relay (described above) and personal integrations are not published.
+  email agent's own setup and personal integrations are not published.
 - One principal, one machine, Discord as the only interface. Tested on macOS.
 - Rules in the constitution shape behavior; only code and configuration enforce it.
   Where a rule has no mechanical backstop, the playbook says so.

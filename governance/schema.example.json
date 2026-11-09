@@ -1,8 +1,8 @@
 {
   "_document_type": "schema",
-  "_schema_version": "1.0",
+  "_schema_version": "1.1",
   "_created": "2026-11-07",
-  "_modified": "2026-11-07",
+  "_modified": "2026-11-09",
   "_owner": "principal",
   "_description": "Defines the required shape of the manifest. Every manifest change must validate against this schema (tools/docs_audit.js) before it is used. NFA - not financial advice.",
   "required_top_level_fields": ["_document_type", "_manifest_version", "_schema_version", "_created", "_modified", "_owner"],
@@ -52,7 +52,9 @@
         "command_interface": { "type": "string", "required": true, "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
         "health": { "type": "string", "required": true, "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
         "logs": { "type": "string", "required": true, "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
-        "approvals": { "type": "string", "pattern": "^\\$\\{[A-Z0-9_]+\\}$" }
+        "approvals": { "type": "string", "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
+        "agent_chat": { "type": "string", "pattern": "^\\$\\{[A-Z0-9_]+\\}$" },
+        "agent_email": { "type": "string", "pattern": "^\\$\\{[A-Z0-9_]+\\}$" }
       }
     },
     "paths": {
@@ -145,6 +147,7 @@
   },
   "conflict_resolution": "If the manifest and schema disagree on load, flag it to the principal immediately and suspend manifest changes until resolved. No automatic reconciliation.",
   "version_log": [
-    { "version": "1.0", "date": "2026-11-07", "change": "Example schema." }
+    { "version": "1.0", "date": "2026-11-07", "change": "Example schema." },
+    { "version": "1.1", "date": "2026-11-09", "change": "Optional agent_chat and agent_email channels for agent slots." }
   ]
 }
